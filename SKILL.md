@@ -23,36 +23,36 @@ Build web interfaces that feel like they were designed by engineers inside NERV 
   --void-panel:       #111110;  /* Raised surface (rare) */
 
   /* NERV Orange — headers, labels, institutional text */
-  --nerv-orange:      #E87A20;  /* Primary labeling color */
-  --nerv-orange-dim:  #A85A18;  /* Secondary labels */
-  --nerv-orange-hot:  #FFB030;  /* Highlighted/active labels */
+  --nerv-orange:      #FF9830;  /* Primary labeling color — high contrast */
+  --nerv-orange-dim:  #D08028;  /* Secondary labels */
+  --nerv-orange-hot:  #FFCC50;  /* Highlighted/active labels */
 
-  /* Nominal Green — data readouts, "system OK" */
-  --data-green:       #30C830;  /* Primary data color */
-  --data-green-dim:   #208820;  /* Secondary data */
-  --data-green-faint: rgba(48, 200, 48, 0.08);  /* Table row hover */
+  /* Nominal Green — data readouts, "system OK" — full phosphor intensity */
+  --data-green:       #50FF50;  /* Primary data color */
+  --data-green-dim:   #30BB30;  /* Secondary data */
+  --data-green-faint: rgba(80, 255, 80, 0.1);  /* Table row hover */
 
   /* Cyan — wireframes, maps, spatial data */
-  --wire-cyan:        #00D0E0;  /* Wireframe lines */
-  --wire-cyan-dim:    #008898;  /* Construction lines */
-  --wire-cyan-glow:   rgba(0, 208, 224, 0.12);  /* Subtle glow */
+  --wire-cyan:        #20F0FF;  /* Wireframe lines */
+  --wire-cyan-dim:    #10A8B8;  /* Construction lines */
+  --wire-cyan-glow:   rgba(32, 240, 255, 0.15);  /* Subtle glow */
 
   /* Alert Red — warnings, refusals, critical states */
-  --alert-red:        #E83020;  /* Primary alert */
-  --alert-red-dim:    #A82018;  /* Background alert panels */
-  --alert-red-hot:    #FF4030;  /* Flashing/urgent */
-  --alert-red-fill:   rgba(232, 48, 32, 0.15);  /* Alert zone background */
+  --alert-red:        #FF4840;  /* Primary alert */
+  --alert-red-dim:    #CC3028;  /* Background alert panels */
+  --alert-red-hot:    #FF6858;  /* Flashing/urgent */
+  --alert-red-fill:   rgba(255, 72, 64, 0.18);  /* Alert zone background */
 
   /* Thermal spectrum — for degradation/heatmap states */
-  --thermal-yellow:   #F0D800;
-  --thermal-magenta:  #D020A0;
-  --thermal-blue:     #2040D0;
-  --thermal-purple:   #8020C0;
+  --thermal-yellow:   #FFE820;
+  --thermal-magenta:  #F030C0;
+  --thermal-blue:     #3060F0;
+  --thermal-purple:   #A030E0;
 
   /* Neutral — secondary text, rules */
-  --steel:            #C8C8C0;  /* Primary readable text */
-  --steel-dim:        #707068;  /* Muted annotations */
-  --steel-faint:      rgba(200, 200, 192, 0.06);  /* Grid lines */
+  --steel:            #E0E0D8;  /* Primary readable text */
+  --steel-dim:        #9A9A90;  /* Muted annotations */
+  --steel-faint:      rgba(224, 224, 216, 0.08);  /* Grid lines */
 }
 ```
 
@@ -63,6 +63,7 @@ Build web interfaces that feel like they were designed by engineers inside NERV 
 - Cyan is for **spatial/structural** — wireframes, maps, grids, containment lines.
 - Red is for **alerts and refusals only** — never decoration.
 - Colors exist in isolation. They don't blend, gradient, or harmonize. Each serves one function.
+- **Phosphor-bright, not muted.** These are CRT colors — they glow. If it looks dim against black, bump it up. Readability always beats subtlety.
 - When a system is under stress, colors **invade each other's space** — red bleeds into green zones, thermal spectrum replaces orderly color coding.
 
 ### Typography
@@ -114,8 +115,8 @@ Every NERV screen has a CRT texture. This is non-negotiable.
     0deg,
     transparent,
     transparent 2px,
-    rgba(0, 0, 0, 0.15) 2px,
-    rgba(0, 0, 0, 0.15) 4px
+    rgba(0, 0, 0, 0.06) 2px,
+    rgba(0, 0, 0, 0.06) 4px
   );
   pointer-events: none;
   z-index: 9999;
@@ -128,8 +129,8 @@ Every NERV screen has a CRT texture. This is non-negotiable.
   inset: 0;
   background: radial-gradient(
     ellipse at center,
-    transparent 50%,
-    rgba(0, 0, 0, 0.4) 100%
+    transparent 60%,
+    rgba(0, 0, 0, 0.35) 100%
   );
   pointer-events: none;
   z-index: 9998;
@@ -1008,11 +1009,18 @@ Common terms:
 
 ## Accessibility
 
-- Orange `#E87A20` on black `#000`: 5.4:1 ✅ (AA)
-- Green `#30C830` on black: 8.2:1 ✅ (AAA)
-- Cyan `#00D0E0` on black: 9.1:1 ✅ (AAA)
-- Red `#E83020` on black: 4.6:1 — **AA large text only.** Always pair with text label.
-- Steel `#C8C8C0` on black: 12.5:1 ✅ (AAA)
+**Contrast is king.** These are CRT phosphor colors — they should GLOW against the void. If text looks dim or washed out, you've gone too dark. Err on the side of too bright.
+
+- Orange `#FF9830` on black `#000`: 8.2:1 ✅ (AAA)
+- Green `#50FF50` on black: 13.8:1 ✅ (AAA)
+- Cyan `#20F0FF` on black: 13.1:1 ✅ (AAA)
+- Red `#FF4840` on black: 5.9:1 ✅ (AA) — pair with text label for small text
+- Steel `#E0E0D8` on black: 16.2:1 ✅ (AAA)
+- Steel-dim `#9A9A90` on black: 7.1:1 ✅ (AAA) — safe for annotations
+
+**Scanline overlay must be subtle (≤6% opacity).** Heavier scanlines kill readability on small text. The CRT effect is atmosphere, not a readability obstacle.
+
+**Vignette must not darken text areas.** Keep the clear zone at ≥60% of the viewport.
 
 ```css
 @media (prefers-reduced-motion: reduce) {
